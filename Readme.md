@@ -27,3 +27,7 @@ The **simulation clock** jumps to the next event time; no real time is used.
 
 ```bash
 make
+```bash
+./sim 20 10
+
+
