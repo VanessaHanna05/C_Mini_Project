@@ -19,23 +19,18 @@ typedef enum {
     EVT_RECV_DATA_ACK,
 
     // infra
-    EVT_TIMEOUT,        // generic timeout (used for DATA ACK and SYN RTO)
+    EVT_TIMEOUT,        // generic timeout (used for SYN RTO if you keep it)
     EVT_RECV_FINISH     // receiver should stop the simulation
 } EventType;
 
-typedef struct Packet {
-    int id;             // unique id
-    int src, dst;       // logical endpoints
-    double tx_time;     // when created/sent by sender
-    int size_bytes;     // 0 => empty/invalid
-} Packet;
+/* NO Packet struct anymore */
 
 typedef struct Event {
     double time;        // simulation time of event
     EventType type;
     int src;            // who scheduled / logical source
     int dst;            // intended logical target
-    void *data;         // optional payload (Packet* or int* pkt_id, etc.)
+    void *data;         // optional payload (now: int* random payload, or NULL)
 } Event;
 
 /* global simulation flags (defined in main.c) */

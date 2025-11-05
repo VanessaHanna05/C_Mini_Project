@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "receiver.h"
 #include "heap_priority.h"
 
 extern double g_now;            // from main.c
 extern int g_stop_simulation;   // from main.c
 
-static int* new_int_heap(int v) { int *p = (int*)malloc(sizeof(int)); *p = v; return p; }
-
 void receiver_init(Receiver *r, int id) {
     r->id = id;
     r->received_ok = 0;
-    r->invalid_packets = 0;
+    r->invalid_packets = 0; // not used in simplified model, but keep the field clean
 }
 
 void receiver_handle(Receiver *r, Network* net, Event *e) {
@@ -26,19 +25,18 @@ void receiver_handle(Receiver *r, Network* net, Event *e) {
         break;
 
     case EVT_RECV_DATA: {
-        Packet* pkt = (Packet*)e->data;
-        if (!pkt) { /* shouldn't happen */ break; }
-        if (pkt->size_bytes <= 0) {
-            r->invalid_packets++;
-            printf("[%.3f] Receiver: RECV DATA INVALID (id=%d)\n", g_now, pkt->id);
-            /* no ACK for invalid packets */
-        } else {
-            r->received_ok++;
-            printf("[%.3f] Receiver: RECV DATA OK (id=%d)\n", g_now, pkt->id);
-            /* send DATA ACK back carrying pkt_id */
-            network_schedule_delivery(net, g_now, EVT_RECV_DATA_ACK, r->id, e->src, new_int_heap(pkt->id));
-        }
-        free(pkt);
+        /* payload is just a random integer allocated by sender */
+        int *payload = (int*)e->data;
+        if (!payload) break;
+
+        r->received_ok++;
+        printf("[%.3f] Receiver: RECV DATA OK from %d (rand=%d) -> ACK\n",
+               g_now, e->src, *payload);
+
+        /* ACK back to sender; no per-packet id needed, so payload = NULL */
+        network_schedule_delivery(net, g_now, EVT_RECV_DATA_ACK, r->id, e->src, NULL);
+
+        free(payload);  /* receiver owns and frees the payload */
         break;
     }
 
