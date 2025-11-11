@@ -10,32 +10,78 @@
 /* global state */
 double g_now = 0.0;
 int g_stop_simulation = 0;
-
+/* The main function takes the arguments of the user that are specified in the command line. 
+The user should provide 3 arguments, the file to simulate, the interval between the messages sent, and the full time to send (= when to stop)
+**arg is used as a pointer to an array of pointer in which each argument is saved arg[0] is the file to simulate, arg[1] is the interval, arg[2] is the full duration*/
 int main(int argc, char **argv) {
     if (argc < 3) {
-        fprintf(stderr, "Usage: %s <send_interval_ms> <duration_s>\n", argv[0]);
-        fprintf(stderr, "Example: %s 100 20\n", argv[0]);
+        /*if the user specifies less than 3 characters we display a message in the terminal showcasing how the message should be written, another design approach 
+        would be have a default value of each argument
+        Note: We usually use stdout to output a message in the terminal, however to distinguish between the normal outputs and error messages 
+        we use stderr but if we use stdout is would do the same and write in the terminal */
+        fprintf(stderr, "Error: missing arguments. Got %d, need at least 3\n", argc);
+        fprintf(stderr, "Run as: %s interval_ms duration_s\n", argv[0]);
+
         return 1;
+        // if the user does not specify the three arguments we will exit the main program and not continue witj the usual execution
     }
 
     double send_interval_ms = atof(argv[1]);
+    // these are the intervals extracted from the terminal inputs 
+    // atof : ascii to float converts the strings into float numbers because in memory these characters are saved as strings from the terminal 
     double duration_s       = atof(argv[2]);
+    // this is the full duration of the simulation, after we cross this duration, the simulation stops 
     if (send_interval_ms <= 0 || duration_s <= 0) {
+        // if any of the arguments are invalid (negative inputs or zero durations and intervals) there is an error and we exit 
         fprintf(stderr, "Invalid args: interval_ms and duration_s must be > 0\n");
         return 1;
     }
     double send_interval_s = send_interval_ms / 1000.0;
+    // since we are using everything in seconds (SI units)
 
-    srand((unsigned)time(NULL));
-
-    /* components */
+    srand((unsigned)time(0));
+    // srand in a function that takes usually a seed number that sets the starting point of the sequence. 
+    // srand is used to make sure that the starting point of the random generators used in the code later do not start always with the same numbers at each run
+    // reference: https://www.geeksforgeeks.org/cpp/rand-and-srand-in-ccpp/
+  
+    // initiate instances of each party of the network
     Network net;
     Sender  snd;
     Receiver rcv;
 
-    network_init(&net, /*base_delay*/ 0.01, /*jitter*/ 0.01);
+    // initializing the parties
+    // The netwok takes the pointer to the network structure that contains: the based delay and the jitter 
+    // the arguments of the structure are used to calculate a random delay each time withing the range: [0.00, 0.02) seconds
+    // the delay uses the formula: double d = base_delay + (2.0 * frand01() - 1.0) * jitter;
+    //frand is a function that generates a random number between 0 and 1
+    // the second argument is the based delay: by choice 
+    // the third argument is the error around the delay so based delay +- jitter 
+    // why choose this range for the delay: https://www.reddit.com/r/HomeNetworking/comments/v685oq/what_should_your_ping_to_your_wifi_router_be_under/#:~:text=Exotic
+    network_init(&net,  0.01,  0.01);
+
+    /* the event_queue_init(void) is a function that is used only to initialize the discrete event queue that is used to schedule events
+    This function creates the queue without scheduling anything
+    The start size of the queue is 0 and is empty 
+    The max size of the queue is set to 100 
+    Allocate memory to the queue of 100 elements first and the size of the queue chnages based on the number of events through reallocations 
+    The allocation of memory is based on the number of elements in the queue and the size of the heapnode that contains the event and the time of scheduling the event 
+    */
     event_queue_init();
-    sender_init(&snd, /*sender_id*/ 0, send_interval_s, duration_s, /*max_pkts*/ 200000);
+
+    /*The sender_init is used to initilize the sender structure that contains:
+    int id;
+    int sent; Counts successfully scheduled DATA events
+    int lost_events_counter; Counts how many packets were "lost" before sending (frand)
+    double next_send_time;
+    double send_interval; How often to schedule EVT_SEND_DATA
+    double duration; When to stop sending data
+    int next_pkt_id;
+    char *acked; 
+    and it is used to schedule the first event that is send a syn 
+    The sender id is set to 0 to distinguish between the sender and the receiver packets 
+
+    */
+    sender_init(&snd, /*sender_id*/ 0, send_interval_s, duration_s);
     receiver_init(&rcv, /*receiver_id*/ 1);
 
     /* main simulation loop */

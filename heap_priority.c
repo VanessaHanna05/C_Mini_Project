@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "heap_priority.h"
 
-#define INITIAL_CAPACITY 64
+#define INITIAL_CAPACITY 100
 
 /* Global heap instance */
 static Heap g_heap;
