@@ -14,9 +14,9 @@ typedef struct {
     int capacity;    // allocated capacity
 } Heap;
 
-void event_queue_init(void);
-void schedule_event(double time, EventType type, int src, int dst, void *data);
-Event *pop_next_event(void);
-int event_queue_empty(void);
+void event_queue_init(void); //event_queue_init allocates an initial array of 100 nodes.
+void schedule_event(double time, EventType type, int src, int dst, void *data); //schedule_event allocates a new Event, fills it, inserts a node at the end of the heap array, then bubble up by time. Amortized insertion cost is O(log N).
+Event *pop_next_event(void); //removes the root node, moves the last node to the root, then bubble down. Removal cost is O(log N).
+int event_queue_empty(void); //checks size.
 
 #endif
