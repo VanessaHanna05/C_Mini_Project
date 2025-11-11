@@ -10,7 +10,7 @@ void network_init(Network* n, double base_delay, double jitter) {
 }
 
 double network_rand_delay(Network* n) {
-    double d = n->base_delay + (2.0 * frand01() - 1.0) * n->jitter; // uniform in [base-jitter, base+jitter]
+    double d = n->base_delay + (2.0 * frand01() - 1.0) * n->jitter;
     if (d < 0.0) d = 0.0;
     return d;
 }
