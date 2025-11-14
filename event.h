@@ -1,19 +1,11 @@
 #ifndef EVENT_H
 #define EVENT_H
-/* 
-Header guards:
-- EVENT_H is a unique macro name for this header file.
-- #ifndef / #define ensure the compiler includes this header only once,
-  even if multiple .c files include it.
-*/
 
 #include <stddef.h>
 /*
 We include <stddef.h> because it defines standard types like size_t and NULL.
 Even if we currently only use NULL via void* pointers, this is good practice.
-*/
 
-/* 
 EventType is an enumeration of all possible event kinds in this simulation.
 We give EVT_SEND_SYN an explicit value of 1 so that 0 is not a valid event
 (by default), and the rest auto-increment from there.
@@ -63,7 +55,6 @@ extern double g_now;
 extern int    g_stop_simulation;
 
 /*
-Public API of the event queue:
 
 - event_queue_init():
     Initializes the global event priority queue. Must be called once before
@@ -82,6 +73,9 @@ Public API of the event queue:
     Returns non-zero (true) if there are no events left in the queue,
     zero (false) otherwise.
 */
+// Question: why are these functions put in event.h 
+// Question: why are there .h files and .c files
+
 void          schedule_event(double time, EventType type, int src, int dst, void *data);
 struct Event* pop_next_event(void);
 int           event_queue_empty(void);

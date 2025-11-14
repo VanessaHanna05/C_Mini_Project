@@ -2,7 +2,7 @@
 #include <stdlib.h>     // For malloc, realloc, exit
 #include <assert.h>     // For assert to check invariants
 #include "heap_priority.h"  // Our own header defining Heap, HeapNode, etc.
-
+// reference: https://www.geeksforgeeks.org/c/c-program-to-implement-min-heap/
 /*
 INITIAL_CAPACITY:
 - Initial number of HeapNode slots we allocate in the heap array.
@@ -54,6 +54,8 @@ static void bubble_up(Heap *h, int i) {
     }
 }
 
+//Question: how does the heap loop like in memory 
+
 /*
 bubble_down:
 - Restores the min-heap property by moving the node at index i downward.
@@ -104,7 +106,6 @@ static void ensure_capacity(Heap *h) {
     }
 }
 
-/* ---------- Public API ---------- */
 
 /*
 event_queue_init:
