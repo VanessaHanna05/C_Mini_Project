@@ -6,7 +6,7 @@
 #include "network.h"
 #include "sender.h"
 #include "receiver.h"
-#include "globals.h"  // declares G_NET/G_SND/G_RCV used by handlers
+#include "globals.h"  
 
 /*
  * -----------------------------------------------------------------------------
@@ -88,7 +88,7 @@ int main(int argc, char **argv){
     /* Seed RNG so losses/jitter vary per run.
      *  - Using time(NULL) is sufficient for demos.
      *  - If you want reproducible runs, replace with a fixed seed or a CLI flag. */
-    srand((unsigned)time(NULL));
+    srand((unsigned)time(0));
 
     /* Build the event queue before any scheduling happens.
      *  - The queue is a min-heap ordered by Event->time.
@@ -102,10 +102,12 @@ int main(int argc, char **argv){
     Network  net;
     Sender   snd;
     Receiver rcv;
+// Question: Why are there pointers to Network, sender and receiver, and these also 
 
     /* Wire globals so handlers can find peers easily without complex plumbing.
      *  - These global pointers are the minimal “service locator” our handlers use
      *    when scheduling cross-component events (e.g., receiver -> sender). */
+    //what happens here? Why do we have these and what does it mean    
     G_NET = &net;
     G_SND = &snd;
     G_RCV = &rcv;
@@ -115,8 +117,8 @@ int main(int argc, char **argv){
      *   - Receiver first: so it’s ready to accept the SYN.
      *   - Sender last: sender_init() immediately schedules the first SYN & timeout. */
     network_init(&net, base_delay, jitter);
-    receiver_init(&rcv, /*id*/1);
-    sender_init(&snd,   /*id*/0, send_interval, duration);
+    receiver_init(&rcv,1);
+    sender_init(&snd,0, send_interval, duration);
 
     /* ------------------------------ MAIN LOOP ------------------------------
      * The core of a discrete-event simulator:
@@ -142,6 +144,8 @@ int main(int argc, char **argv){
          *  - If e->data was heap-allocated and a destructor was provided when the
          *    event was scheduled, we free it here (after the handler finishes).
          *  - This pattern is robust against early returns inside handlers. */
+
+         // Question: I did not understand what is this 
         if (e->data && e->data_dtor) {
             e->data_dtor(e->data);
         }
@@ -153,6 +157,7 @@ int main(int argc, char **argv){
      *  - Simple counters help confirm expectations and are useful for quick
      *    regressions when changing parameters or code.
      *  - We also report an average one-way delay as observed by the network model. */
+    
     printf("\n=== Stats ===\n");
     printf("Attempted sends: %d\n", snd.sent + snd.lost_events_counter);
     printf("Sender sent: %d\n",        snd.sent);
