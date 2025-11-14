@@ -72,6 +72,8 @@ void receiver_init(Receiver *r, int id){
  * The scheduled event will invoke snd_recv_synack() on the sender side.
  */
 void rcv_recv_syn(void *ctx, Event *e){
+
+    //Question: what is this and what is ctx what does the 76 do
     Receiver *r = (Receiver*)ctx;  // convert generic ctx pointer to a Receiver*
     printf("[%.3f] Receiver: RECV SYN -> SEND SYNACK\n", g_now);
 
@@ -112,6 +114,7 @@ void rcv_recv_syn(void *ctx, Event *e){
  *     purpose is educational — to show the flow of events.
  */
 void rcv_recv_ack(void *ctx, Event *e){
+    //Question: if these are unused why are there set 
     (void)ctx;  // unused
     (void)e;    // unused
     printf("[%.3f] Receiver: RECV ACK (connection established)\n", g_now);
@@ -143,6 +146,7 @@ void rcv_recv_ack(void *ctx, Event *e){
  */
 void rcv_recv_data(void *ctx, Event *e){
     Receiver *r = (Receiver*)ctx;   // cast context back to receiver
+    //Question what is this line 
     int *pkt_id = (int*)e->data;    // retrieve payload (packet ID)
     if (!pkt_id) {
         // If the payload is missing, treat it as a corrupted event.

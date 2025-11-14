@@ -34,6 +34,7 @@ extern double g_now;   // global simulation clock (set by main loop before each 
 
 /* Private helper for uniform randoms (0..1) and a payload destructor alias. */
 static double frand01(void){ return rand()/(double)RAND_MAX; }
+//Question why is there a free_int function while we can use free 
 static void free_int(void *p){ free(p); }
 
 /* new_int_heap:
@@ -65,6 +66,7 @@ int* new_int_heap(int v){
  *   - acked[]:       marks whether each pkt_id has been acknowledged (0/1)
  */
 void sender_init(Sender *s, int id, double send_interval_s, double duration_s) {
+    //Question: is the id of the sender always the same? 
     s->id = id;
     s->sent = 0;
     s->lost_events_counter = 0;
@@ -82,7 +84,7 @@ void sender_init(Sender *s, int id, double send_interval_s, double duration_s) {
      *
      * Note: These are scheduled as events so the main loop processes them in
      *       timestamp order alongside all other events. */
-    schedule_event(0.0,      s->id, /*dst*/ 1, NULL, NULL,                 snd_send_syn, s);
+    schedule_event(0.0,      s->id,  1, NULL, NULL,                 snd_send_syn, s);
     schedule_event(SYN_RTO,  s->id, s->id,   new_int_heap(0), free_int,    snd_timeout,  s);
 }
 
@@ -237,8 +239,12 @@ void snd_recv_data_ack(void *ctx, Event *e){
  *  - In more complete designs, you would cap the number of retries,
  *    backoff the timeout (exponential RTO), or abort after some attempts.
  *  - Here we keep it simple to spotlight the event-driven pattern.
+ * 
+ * 
+ * 
  */
 void snd_timeout(void *ctx, Event *e){
+    // when are we using the function in this code and sending timeouts, shouldnt we send timeout after each packet 
     Sender *s = (Sender*)ctx;
     int id = e->data ? *(int*)e->data : -1; // which timer fired (0 = handshake timer)
     if (id == 0 && !s->acked[0]) {

@@ -29,6 +29,8 @@ typedef void (*EventHandler)(void *ctx, struct Event *e);
 typedef void (*EventDataDtor)(void *data);
 
 /* Core event structure carried in the priority queue. */
+
+//Question: why is there a time in the event and a time in the heap node 
 typedef struct Event {
     double        time;      // When this should fire (simulation time)
     int           src;       // Who scheduled/sent it (useful for logs/filters)
@@ -53,6 +55,8 @@ extern int    g_stop_simulation;
 void   schedule_event(double time, int src, int dst,
                       void *data, EventDataDtor dtor,
                       EventHandler handler, void *ctx);
+
+                      //Question: why do we have ctx if we have src and destination 
 
 /* Queue primitives used by the main loop. */
 struct Event* pop_next_event(void);

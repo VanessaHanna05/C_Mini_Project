@@ -82,7 +82,8 @@ static void bubble_up(Heap *h, int i) {
  * Complexity: O(log N). */
 static void bubble_down(Heap *h, int i) {
     for (;;) {
-        int l = 2*i + 1, r = 2*i + 2, s = i; // left/right child, "s" = index of smallest so far
+        int l = 2*i + 1,
+         r = 2*i + 2, s = i; // left/right child, "s" = index of smallest so far
 
         // If left child exists and is smaller than current "smallest", update s.
         if (l < h->size && h->arr[l].time < h->arr[s].time) s = l;
