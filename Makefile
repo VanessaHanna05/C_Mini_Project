@@ -1,18 +1,34 @@
 CC = gcc
 CFLAGS = -O2 -Wall -Wextra -std=c11
 
-OBJS = main.o heap_priority.o sender.o receiver.o network.o
+# Add event.o here
+OBJS = main.o event.o heap_priority.o sender.o receiver.o network.o
 
 all: sim
 
 sim: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
-main.o: main.c event.h heap_priority.h sender.h receiver.h network.h
+# Note: we do NOT list event.c as a dependency for everything.
+# Each .o just depends on its own .c and the headers it includes.
+
+main.o: main.c event.h heap_priority.h sender.h receiver.h network.h globals.h
+	$(CC) $(CFLAGS) -c main.c
+
+event.o: event.c event.h heap_priority.h
+	$(CC) $(CFLAGS) -c event.c
+
 heap_priority.o: heap_priority.c heap_priority.h event.h
-sender.o: sender.c sender.h event.h heap_priority.h network.h
-receiver.o: receiver.c receiver.h event.h heap_priority.h network.h
-network.o: network.c network.h event.h heap_priority.h
+	$(CC) $(CFLAGS) -c heap_priority.c
+
+sender.o: sender.c sender.h event.h heap_priority.h network.h globals.h receiver.h
+	$(CC) $(CFLAGS) -c sender.c
+
+receiver.o: receiver.c receiver.h event.h heap_priority.h network.h globals.h sender.h
+	$(CC) $(CFLAGS) -c receiver.c
+
+network.o: network.c network.h event.h
+	$(CC) $(CFLAGS) -c network.c
 
 clean:
 	rm -f $(OBJS) sim
