@@ -1,16 +1,12 @@
 CC = gcc
 CFLAGS = -O2 -Wall -Wextra -std=c11
 
-# Add event.o here
 OBJS = main.o event.o heap_priority.o sender.o receiver.o network.o
 
 all: sim
 
 sim: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
-
-# Note: we do NOT list event.c as a dependency for everything.
-# Each .o just depends on its own .c and the headers it includes.
 
 main.o: main.c event.h heap_priority.h sender.h receiver.h network.h globals.h
 	$(CC) $(CFLAGS) -c main.c
