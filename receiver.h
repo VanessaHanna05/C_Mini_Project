@@ -14,9 +14,9 @@ typedef struct Receiver {
 } Receiver;
 
 void receiver_init(Receiver *r, int id);
-void rcv_recv_syn(struct Event *e);
-void rcv_recv_ack(struct Event *e);
+void rcv_recv_syn();
+void rcv_recv_ack();
 void rcv_recv_data(struct Event *e);
-void rcv_recv_finish(struct Event *e);
+void rcv_recv_finish();
 
 #endif

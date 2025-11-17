@@ -9,7 +9,7 @@ typedef struct Network {
     double sum_delay;    
     int    count_delay;  
 } Network;
-
+double frand01(void);
 void   network_init(Network* n, double base_delay, double jitter);
 double network_rand_delay(Network* n);
 

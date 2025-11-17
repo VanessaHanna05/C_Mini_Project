@@ -18,9 +18,9 @@ typedef struct Sender {
 } Sender;
 
 void sender_init(Sender *s, int id, double send_interval_s, double duration_s);
-void snd_send_syn(struct Event *e);
-void snd_recv_synack(struct Event *e);
-void snd_send_data(struct Event *e);
+void snd_send_syn();
+void snd_recv_synack();
+void snd_send_data();
 void snd_recv_data_ack(struct Event *e);
 void snd_timeout(struct Event *e);
 
