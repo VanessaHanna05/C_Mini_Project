@@ -15,7 +15,6 @@
     return rand() / (double)RAND_MAX;
 }
 
-
 /* Initializes a Network structure with base delay and jitter.
    base_delay = average one-way latency (seconds)
    jitter = the maximum amount the actual delay can vary above or below base_delay */
@@ -25,7 +24,6 @@ void network_init(Network* n, double base_delay, double jitter) {
     n->sum_delay   = 0.0;          // Accumulates all delays seen (cumulative sum)
     n->count_delay = 0;            // Counts how many packets passed through the network
 }
-
 
 /* 
    Computes one random network delay
@@ -41,7 +39,6 @@ double network_rand_delay(Network* n) {
 
     return d;
 }
-
 
 /* Schedules when a packet (packet_id) is delivered from src to dst.
 

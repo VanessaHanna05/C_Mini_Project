@@ -74,7 +74,6 @@ printf("Receiver total deliveries: %d\n", total_delivs);
 printf("Retransmissions received (due to timeouts) : %d\n", retransmissions);
 printf("Receiver invalid packets : %d\n", g_receiver.invalid_packets);
 
-
 double avg_delay = (g_net.sum_delay / g_net.count_delay); // calculating the average delay of the network the count delay is incremented everytime a packet is passed to the network 
 
 printf("Average one-way network delay: %.6f s (from %d deliveries)\n", avg_delay, g_net.count_delay);

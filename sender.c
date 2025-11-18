@@ -31,7 +31,6 @@ void sender_init(Sender *s, int id, double send_interval_s, double duration_s) {
     schedule_event(RTO,  s->id, s->id, -1, snd_timeout);
 }
 
-
 //  Ask the network to deliver a SYN to the receive by scheduling an event with handler rcv_recv_syn.
 void snd_send_syn() {
     printf("[%.3f] Sender: SEND SYN\n", g_now);

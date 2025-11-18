@@ -4,10 +4,6 @@
 #include "network.h"
 #include "sender.h"
 
-
-
-
-
 // id: 0
 // received_ok: total packets delivered here
 // unique_ok: number of unique packets
@@ -20,7 +16,6 @@ void receiver_init(Receiver *r, int id) {
     r->invalid_packets = 0; 
 }
 
-
 /*
    Handler for receiving a SYN packet during connection startup.*/
 void rcv_recv_syn() {
@@ -28,7 +23,6 @@ void rcv_recv_syn() {
     // Schedule SYNACK to be delivered to the sender.
     network_schedule_delivery(&g_net,g_now, RECEIVER_ID, SENDER_ID,-1,snd_recv_synack);
 }
-
 
 /*Handler for receiving ACK after SYNACK.
    This confirms the connection is established.
@@ -61,7 +55,6 @@ void rcv_recv_data(Event *e) {
     printf("[%.3f] Receiver: RECV DATA #%d -> SEND ACK\n", g_now, pkt_id);
     network_schedule_delivery(&g_net, g_now, RECEIVER_ID,SENDER_ID,pkt_id, snd_recv_data_ack);
 }
-
 
 /*Handles FINISH event from sender indicating the end
    of the simulation. This is the final control message.

@@ -1,6 +1,5 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
-
 //Reference: https://www.geeksforgeeks.org/c/understanding-extern-keyword-in-c/
 /*NOTE: 
 We must include the forward declarations (struct Network;)

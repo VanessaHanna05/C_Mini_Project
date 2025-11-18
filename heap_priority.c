@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "heap_priority.h"
 
-
 /*
 Inside the heap to be able to manipulate children and parents we can use these indexes
 parent(i) = (i - 1) / 2

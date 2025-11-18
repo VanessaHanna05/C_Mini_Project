@@ -2,7 +2,6 @@
 #define HEAP_PRIORITY_H
 #include "event.h"
 
- 
 typedef struct {
     Event **arr;  // pointer to pointer to Event so dynamic array of pointers to Event so arr[i] is of type Event*.
     // we are using double pointers in this case because heap should reorder pointers, not the events themselves (so the heap hipifies the pointers to events)

@@ -1,7 +1,6 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-
 struct Event;                     
 
 typedef void (*EventHandler)(struct Event *e);

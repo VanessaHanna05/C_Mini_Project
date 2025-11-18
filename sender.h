@@ -5,7 +5,6 @@
 #define SENDER_ID   0
 #define RECEIVER_ID 1
 
-
 typedef struct Sender {
     int    id;
     int    sent;

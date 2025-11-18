@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "event.h"
 #include "heap_priority.h"
-
 double g_now = 0.0;
 int    g_stop_simulation = 0;
 
